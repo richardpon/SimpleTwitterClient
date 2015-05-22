@@ -19,31 +19,40 @@ import java.util.List;
  */
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
 
+    private static class ViewHolder {
+        ImageView profileImage;
+        TextView username;
+        TextView body;
+    }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
         super(context, android.R.layout.simple_list_item_1, tweets);
     }
-
-    // Override and setup custom template
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         Tweet tweet = getItem(position);
 
+        ViewHolder viewHolder;
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
+
+            viewHolder.profileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
+            viewHolder.username = (TextView) convertView.findViewById(R.id.tvUsername);
+            viewHolder.body = (TextView) convertView.findViewById(R.id.tvBody);
+
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        ImageView ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
-        TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
-        TextView tvBody = (TextView) convertView.findViewById(R.id.tvBody);
+        viewHolder.username.setText(tweet.getUser().getScreenName());
+        viewHolder.body.setText(tweet.getBody());
+        viewHolder.profileImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
 
-        tvUsername.setText(tweet.getUser().getScreenName());
-        tvBody.setText(tweet.getBody());
-        ivProfileImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
-
-        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
+        Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(viewHolder.profileImage);
 
         return convertView;
     }
