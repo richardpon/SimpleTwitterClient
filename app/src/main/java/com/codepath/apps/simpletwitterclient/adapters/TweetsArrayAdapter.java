@@ -63,8 +63,6 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         viewHolder.body.setText(tweet.getBody());
         viewHolder.profileImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
 
-        //Log.i(TAG, tweet.getUser().getScreenName() + "-->" + tweet.getBody());
-
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(viewHolder.profileImage);
 
         return convertView;
