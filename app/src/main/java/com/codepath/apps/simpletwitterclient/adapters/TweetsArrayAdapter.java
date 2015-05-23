@@ -1,6 +1,7 @@
 package com.codepath.apps.simpletwitterclient.adapters;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,14 @@ import java.util.List;
  */
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
 
+    AssetManager assets;
+
+    private final static String TAG = "TweetsArrayAdapter";
+
     private static class ViewHolder {
         ImageView profileImage;
         TextView username;
+        TextView name;
         TextView body;
     }
 
@@ -41,6 +47,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
 
             viewHolder.profileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
             viewHolder.username = (TextView) convertView.findViewById(R.id.tvUsername);
+            viewHolder.name = (TextView) convertView.findViewById(R.id.tvName);
             viewHolder.body = (TextView) convertView.findViewById(R.id.tvBody);
 
             convertView.setTag(viewHolder);
@@ -49,8 +56,11 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         }
 
         viewHolder.username.setText(tweet.getUser().getScreenName());
+        viewHolder.name.setText(tweet.getUser().getName());
         viewHolder.body.setText(tweet.getBody());
         viewHolder.profileImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
+
+        //Log.i(TAG, tweet.getUser().getScreenName() + "-->" + tweet.getBody());
 
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(viewHolder.profileImage);
 
