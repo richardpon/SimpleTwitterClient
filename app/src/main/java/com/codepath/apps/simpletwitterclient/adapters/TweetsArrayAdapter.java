@@ -29,6 +29,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         TextView username;
         TextView name;
         TextView body;
+        TextView createdAt;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
@@ -49,6 +50,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
             viewHolder.username = (TextView) convertView.findViewById(R.id.tvUsername);
             viewHolder.name = (TextView) convertView.findViewById(R.id.tvName);
             viewHolder.body = (TextView) convertView.findViewById(R.id.tvBody);
+            viewHolder.createdAt = (TextView) convertView.findViewById(R.id.tvCreatedAt);
 
             convertView.setTag(viewHolder);
         } else {
@@ -57,6 +59,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
 
         viewHolder.username.setText(tweet.getUser().getScreenName());
         viewHolder.name.setText(tweet.getUser().getName());
+        viewHolder.createdAt.setText(tweet.getCreatedAt());
         viewHolder.body.setText(tweet.getBody());
         viewHolder.profileImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
 
