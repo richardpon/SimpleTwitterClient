@@ -8,4 +8,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Tweet Item -->
+    <string name="tweet_screenname">"@wilw"</string>
+    <string name="tweet_name">Wil Wheaton</string>
+    <string name="tweet_body">Missed the East Coast showing of @wilwproject because I was writing @CAH cards with the brilliant Cards Against Humanity tean. TO THE DVR!</string>
+
+
+    <color name="white">#FFFFFF</color>
+
 </resources>
