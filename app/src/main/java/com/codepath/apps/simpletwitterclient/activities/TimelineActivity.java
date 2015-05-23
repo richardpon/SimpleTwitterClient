@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.TweetsArrayAdapter;
@@ -108,7 +109,8 @@ public class TimelineActivity extends ActionBarActivity {
             //Failure
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d(TAG, "ERROR==="+errorResponse.toString());
+                Log.i(TAG, "ERROR==="+errorResponse.toString());
+                Toast.makeText(TimelineActivity.this, "GET request failed!", Toast.LENGTH_SHORT).show();
             }
         });
     }
