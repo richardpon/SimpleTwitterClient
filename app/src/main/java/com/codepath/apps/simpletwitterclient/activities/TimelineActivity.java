@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.TweetsArrayAdapter;
+import com.codepath.apps.simpletwitterclient.listeners.EndlessScrollListener;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 import com.codepath.apps.simpletwitterclient.networking.TwitterApplication;
 import com.codepath.apps.simpletwitterclient.networking.TwitterClient;
@@ -27,6 +28,7 @@ public class TimelineActivity extends ActionBarActivity {
     private TweetsArrayAdapter aTweets;
     private ArrayList<Tweet> tweets;
     private ListView lvTweets;
+    private long minTweetId; //Long.MAX_VALUE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +47,16 @@ public class TimelineActivity extends ActionBarActivity {
         //connect listview to adapter
         lvTweets.setAdapter(aTweets);
 
+        // Tried to use Long.MAX_VALUE here, but didn't work. Instead used Long.MAX_VALUE/10
+        // This should be large enough
+        minTweetId = Long.parseLong("922337203685477580");
+
+        // Set up infinite scroll
+        setScrollListener();
+
         //get the client
         client = TwitterApplication.getRestClient(); //singleton client
-        populateTimeLine();
+        fetchTweetsIntoTimeline(minTweetId);
     }
 
 
@@ -79,31 +88,52 @@ public class TimelineActivity extends ActionBarActivity {
      * Send API request to get the timeline json
      * Fill the ListView by creating the tweet objects from json
      */
-    private void populateTimeLine() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+    private void fetchTweetsIntoTimeline(long maxTweetId) {
+
+        client.getHomeTimeline(maxTweetId, new JsonHttpResponseHandler() {
 
             //Success
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
-                Log.d(TAG, json.toString());
 
                 // deserialize json
                 // create models and add then to the adapter
                 // load model data into listview
-
                 ArrayList<Tweet> tweets = Tweet.fromJsonArray(json);
+                updateMinTweetIdFromTweetList(tweets);
                 aTweets.addAll(tweets);
-                Log.i(TAG, aTweets.toString());
             }
 
 
             //Failure
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d(TAG, errorResponse.toString());
+                Log.d(TAG, "ERROR==="+errorResponse.toString());
             }
+        });
+    }
 
+    /**
+     * Keeps track of the minimum tweet id so that new non-dupe tweets can be fetched
+     */
+    private void updateMinTweetIdFromTweetList(ArrayList<Tweet> tweetsArray) {
+        long curTweetId;
 
+        for(int i = 0; i < tweetsArray.size() ; i++) {
+            curTweetId = tweetsArray.get(i).getUid();
+            if (curTweetId < minTweetId) {
+                minTweetId = curTweetId;
+            }
+        }
+
+    }
+
+    private void setScrollListener() {
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore() {
+                fetchTweetsIntoTimeline(minTweetId);
+            }
         });
     }
 

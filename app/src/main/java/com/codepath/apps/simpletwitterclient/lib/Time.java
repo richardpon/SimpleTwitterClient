@@ -2,13 +2,13 @@ package com.codepath.apps.simpletwitterclient.lib;
 
 
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class Time {
 
+    private static final String TAG = "Time";
 
     /**
      * Copied directly from:
@@ -34,11 +34,7 @@ public class Time {
 
     public static String getTimeAgo(String rawJsonDate) {
         String longFormat = Time.getRelativeTimeAgo(rawJsonDate);
-
-        Log.i("debug", "       "+longFormat);
-
         String[] parts = longFormat.split(" ");
-
         return parts[0] + parts[1].substring(0,1);
     }
 
