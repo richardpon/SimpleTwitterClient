@@ -58,6 +58,7 @@ public class TimelineActivity extends ActionBarActivity {
         //get the client
         client = TwitterApplication.getRestClient(); //singleton client
         fetchTweetsIntoTimeline(minTweetId);
+
     }
 
 
@@ -67,6 +68,12 @@ public class TimelineActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setLogo(R.drawable.ic_twitter);
+        actionBar.setDisplayUseLogoEnabled(true);
+
         return true;
     }
 

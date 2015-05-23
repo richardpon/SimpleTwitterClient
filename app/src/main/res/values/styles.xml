@@ -11,11 +11,18 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:actionBarStyle">@style/TimelineActionBar</item>
+        <item name="actionBarStyle">@style/TimelineActionBar</item>
     </style>
     <!--
     <style name="CustomTextViewStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
     -->
+
+    <style name="TimelineActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/twitter_blue</item>
+        <item name="background">@color/twitter_blue</item>
+    </style>
 
 </resources>
