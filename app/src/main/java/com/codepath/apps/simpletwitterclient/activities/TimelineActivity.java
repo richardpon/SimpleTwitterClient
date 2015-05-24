@@ -1,5 +1,6 @@
 package com.codepath.apps.simpletwitterclient.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class TimelineActivity extends ActionBarActivity {
     private ArrayList<Tweet> tweets;
     private ListView lvTweets;
     private long minTweetId; //Long.MAX_VALUE;
+    private final int REQUEST_CODE_COMPOSE = 323;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,10 @@ public class TimelineActivity extends ActionBarActivity {
 
         //get the client
         client = TwitterApplication.getRestClient(); //singleton client
-        fetchTweetsIntoTimeline(minTweetId);
+
+
+
+        //fetchTweetsIntoTimeline(minTweetId);
 
     }
 
@@ -85,9 +90,9 @@ public class TimelineActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -144,6 +149,22 @@ public class TimelineActivity extends ActionBarActivity {
                 fetchTweetsIntoTimeline(minTweetId);
             }
         });
+    }
+
+    /**
+     * Called when user wants to compose a tweet
+     * @param menuItem MenuItem
+     */
+    public void actionCompose(MenuItem menuItem) {
+        Intent i = new Intent(this, ComposeActivity.class);
+        startActivityForResult(i, REQUEST_CODE_COMPOSE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
+
+        }
     }
 
 }
