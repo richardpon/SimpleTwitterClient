@@ -14,6 +14,15 @@
     <string name="tweet_body">Missed the East Coast showing of @wilwproject because I was writing @CAH cards with the brilliant Cards Against Humanity tean. TO THE DVR!</string>
 
 
-    <color name="white">#FFFFFF</color>
+    <!-- Timeline Action Bar -->
+    <string name="compose">compose</string>
+
+    <string name="title_activity_compose">ComposeActivity</string>
+
+    <!-- Timeline Action Bar -->
+    <string name="menu_send_tweet">TWEET</string>
+
+
+
 
 </resources>

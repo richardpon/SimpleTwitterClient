@@ -54,9 +54,16 @@
         <!-- Timeline -->
         <activity
             android:name=".activities.TimelineActivity"
-            android:label="@string/title_activity_timeline">
+            android:label="@string/title_activity_timeline" >
         </activity>
-
+        <activity
+            android:name=".activities.ComposeActivity"
+            android:label="@string/title_activity_compose"
+            android:parentActivityName=".activities.TimelineActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.codepath.apps.simpletwitterclient.activities.TimelineActivity" />
+        </activity>
     </application>
 
 </manifest>
