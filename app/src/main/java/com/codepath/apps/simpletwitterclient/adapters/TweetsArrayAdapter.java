@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletwitterclient.R;
-import com.codepath.apps.simpletwitterclient.lib.Logger;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -72,7 +71,6 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         viewHolder.mediaImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
         viewHolder.mediaImage.setVisibility(View.GONE);
         if (tweet.getMediaUrl().length() != 0) {
-            Logger.log(TAG, "setting image to ="+tweet.getMediaUrl());
             Picasso.with(getContext()).load(tweet.getMediaUrl()).into(viewHolder.mediaImage);
             viewHolder.mediaImage.setVisibility(View.VISIBLE);
         }

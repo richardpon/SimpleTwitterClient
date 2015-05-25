@@ -12,10 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="#ff0092ff"
-        android:layout_marginRight="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_margin="10dp"
         />
 
     <!-- First Line - name, screen name, relative time-->
@@ -77,6 +74,9 @@
         android:text="@string/tweet_body"
         android:id="@+id/tvBody"
         android:textSize="14sp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_below="@+id/rlUsername"
         android:layout_alignLeft="@+id/rlUsername"
         android:layout_alignStart="@+id/rlUsername" />
@@ -87,14 +87,14 @@
         android:layout_height="175dp"
         android:id="@+id/ivMediaImage"
         android:layout_below="@+id/tvBody"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/grill"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:layout_alignLeft="@id/rlUsername"
-        android:layout_alignStart="@id/rlUsername"
-        android:layout_alignRight="@id/rlUsername"
-        android:layout_alignEnd="@id/rlUsername"
+        android:layout_alignLeft="@id/tvBody"
+        android:layout_alignStart="@id/tvBody"
+        android:layout_alignRight="@id/tvBody"
+        android:layout_alignEnd="@id/tvBody"
         android:contentDescription="@string/tweet_media_description"
         />
 </RelativeLayout>
