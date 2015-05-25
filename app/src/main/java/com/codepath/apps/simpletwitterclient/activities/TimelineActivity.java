@@ -3,7 +3,6 @@ package com.codepath.apps.simpletwitterclient.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -11,6 +10,8 @@ import android.widget.Toast;
 
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.TweetsArrayAdapter;
+import com.codepath.apps.simpletwitterclient.lib.Logger;
+import com.codepath.apps.simpletwitterclient.lib.Toaster;
 import com.codepath.apps.simpletwitterclient.listeners.EndlessScrollListener;
 import com.codepath.apps.simpletwitterclient.models.SignedInUser;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
@@ -61,6 +62,9 @@ public class TimelineActivity extends ActionBarActivity {
         //get the client
         client = TwitterApplication.getRestClient(); //singleton client
 
+        // Get all tweets from Storage
+        ArrayList existingTweets = (ArrayList) Tweet.getAll();
+        aTweets.addAll(existingTweets);
 
         fetchSignedInUsersProfile();
         fetchTweetsIntoTimeline(minTweetId);
@@ -117,20 +121,23 @@ public class TimelineActivity extends ActionBarActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray json) {
 
+                Logger.log(TAG, "-->network success");
+
                 // deserialize json
                 // create models and add then to the adapter
                 // load model data into listview
                 ArrayList<Tweet> tweets = Tweet.fromJsonArray(json);
                 updateMinTweetIdFromTweetList(tweets);
+                persistTweets(tweets);
                 aTweets.addAll(tweets);
             }
-
 
             //Failure
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.i(TAG, "ERROR==="+errorResponse.toString());
-                Toast.makeText(TimelineActivity.this, "GET request failed!", Toast.LENGTH_SHORT).show();
+                Logger.log(TAG, "-->no network");
+                Toaster.create(TimelineActivity.this, "Sorry, the network appears to be down");
+                Toaster.create(TimelineActivity.this, "Please pull to refresh to try again");
             }
         });
     }
@@ -148,6 +155,21 @@ public class TimelineActivity extends ActionBarActivity {
             }
         }
 
+    }
+
+    /**
+     * Persists each Tweet into SQLite via Active Android
+     */
+    private void persistTweets(ArrayList<Tweet> tweetsArray) {
+        for(int i = 0; i < tweetsArray.size() ; i++) {
+            Tweet curTweet = tweetsArray.get(i);
+
+            // Save Tweet's user
+            curTweet.getUser().save();
+
+            // Save Tweet
+            curTweet.save();
+        }
     }
 
     private void setScrollListener() {
@@ -198,8 +220,7 @@ public class TimelineActivity extends ActionBarActivity {
             //Failure
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.i(TAG, "ERROR getting Signed in User===" + errorResponse.toString());
-                Toast.makeText(TimelineActivity.this, "Failed to get signed in user's info", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TimelineActivity.this, "Is the network down? Using cached User", Toast.LENGTH_SHORT).show();
             }
         });
     }
