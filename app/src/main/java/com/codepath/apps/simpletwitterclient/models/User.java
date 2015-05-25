@@ -1,13 +1,21 @@
 package com.codepath.apps.simpletwitterclient.models;
 
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User {
+import java.util.List;
+
+@Table(name = "Users")
+public class User extends Model {
 
     public User() {
-
+        super();
     }
 
     public User(String name, String screenName, long uid, String profileImageUrl) {
@@ -38,9 +46,17 @@ public class User {
     }
 
     // List Attributes
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "uid")
     private long uid;
+
+    @Column(name = "screen_name")
     private String screenName;
+
+    @Column(name = "profile_image_url")
     private String profileImageUrl;
 
 
@@ -58,6 +74,16 @@ public class User {
         }
 
         return u;
+    }
+
+    public static User getUserWithId(long uid) {
+        List<User> Users = new Select()
+                .from(User.class)
+                .where("uid = ?", uid)
+                .limit(1)
+                .execute();
+
+        return Users.get(0);
     }
 
 

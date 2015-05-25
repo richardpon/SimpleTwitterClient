@@ -1,6 +1,9 @@
 package com.codepath.apps.simpletwitterclient.models;
 
-import com.codepath.apps.simpletwitterclient.lib.Logger;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 import com.codepath.apps.simpletwitterclient.lib.Time;
 
 import org.json.JSONArray;
@@ -8,22 +11,42 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // Parse the JSON + Store the data
 // Encapsulate state logic or display logic
-public class Tweet {
+@Table(name = "Tweets")
+public class Tweet extends Model {
 
     private final static String TAG = "Tweet";
 
     // List the attributes
-    private String body;
-    private long uid; //unique id for the tweet
-    private User user;
-    private String createdAt;
-    private String mediaUrl;
+    @Column(name = "body")
+    public String body;
+
+    @Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+    public long uid; //unique id for the tweet
+
+    public User user;
+
+    @Column(name = "user_id")
+    public long userId;
+
+    @Column(name = "created_at")
+    public String createdAt;
+
+    @Column(name = "media_url")
+    public String mediaUrl;
 
     public User getUser() {
         return user;
+    }
+
+    /**
+     * Default constructor for ActiveAndroid models
+     */
+    public Tweet() {
+        super();
     }
 
     public String getCreatedAt() {
@@ -55,6 +78,7 @@ public class Tweet {
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
             tweet.mediaUrl = getMediaUrlfromJson(jsonObject);
+            tweet.userId = tweet.user.getUid();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -69,7 +93,6 @@ public class Tweet {
         String mediaUrl;
         try {
             mediaUrl = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url");
-            Logger.log(TAG, "found media! ="+mediaUrl);
         } catch (JSONException e) {
             e.printStackTrace();
             mediaUrl = "";
@@ -97,5 +120,22 @@ public class Tweet {
         return tweets;
     }
 
+    public void initUser() {
+        this.user = User.getUserWithId(this.userId);
+    }
+
+
+    public static List<Tweet> getAll() {
+        List<Tweet> tweets = new Select()
+                .from(Tweet.class)
+                .orderBy("uid DESC")
+                .execute();
+
+        for (int i = 0 ; i < tweets.size() ; i++) {
+            tweets.get(i).initUser();
+        }
+
+        return tweets;
+    }
     
 }
