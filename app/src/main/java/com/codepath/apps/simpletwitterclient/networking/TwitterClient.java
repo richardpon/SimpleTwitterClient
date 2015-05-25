@@ -68,6 +68,17 @@ url: GET statuses/home_timeline.json
         getClient().get(apiUrl, params, handler);
     }
 
+    public void sendTweet(String text, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("statuses/update.json");
+
+        //Specify Params
+        RequestParams params = new RequestParams();
+        params.put("status", text);
+
+        // Execute
+        getClient().post(apiUrl, params, handler);
+    }
+
 
 
 

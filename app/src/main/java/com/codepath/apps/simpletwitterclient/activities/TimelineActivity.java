@@ -52,9 +52,8 @@ public class TimelineActivity extends ActionBarActivity {
         //connect listview to adapter
         lvTweets.setAdapter(aTweets);
 
-        // Tried to use Long.MAX_VALUE here, but didn't work. Instead used Long.MAX_VALUE/10
-        // This should be large enough
-        minTweetId = Long.parseLong("922337203685477580");
+        // Clear Tweets and reset state
+        clearTweets();
 
         // Set up infinite scroll
         setScrollListener();
@@ -63,11 +62,19 @@ public class TimelineActivity extends ActionBarActivity {
         client = TwitterApplication.getRestClient(); //singleton client
 
 
-        //fetchSignedInUsersProfile();
-        //fetchTweetsIntoTimeline(minTweetId);
+        fetchSignedInUsersProfile();
+        fetchTweetsIntoTimeline(minTweetId);
     }
 
-
+    /**
+     *  Clear current Tweets
+     */
+    private void clearTweets() {
+        // Tried to use Long.MAX_VALUE here, but didn't work. Instead used Long.MAX_VALUE/10
+        // This should be large enough
+        minTweetId = Long.parseLong("922337203685477580");
+        aTweets.clear();
+    }
 
 
     @Override
@@ -164,7 +171,13 @@ public class TimelineActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
+            Boolean isSuccess = data.getExtras().getBoolean("success");
 
+            // If Tweeted, then clear the current tweets and re-fetch new ones
+            if (isSuccess) {
+                clearTweets();
+                fetchTweetsIntoTimeline(minTweetId);
+            }
         }
     }
 

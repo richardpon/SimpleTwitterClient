@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 
 public class SignedInUser {
 
+    private static final String TAG = "SignedInUser";
+
     /**
      * Persists the signed in User to prefs
      * @param signedInUser User
@@ -14,7 +16,7 @@ public class SignedInUser {
     public static void persistSignedInUser(Context context, User signedInUser) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor edit = pref.edit();
-        edit.putString("screenName", signedInUser.getScreenName());
+        edit.putString("screenName", signedInUser.getScreenNameRaw());
         edit.putString("name", signedInUser.getName());
         edit.putLong("id", signedInUser.getUid());
         edit.putString("profileUrl", signedInUser.getProfileImageUrl());

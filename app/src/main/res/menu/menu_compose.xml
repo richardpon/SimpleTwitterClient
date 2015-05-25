@@ -9,6 +9,7 @@
         android:title="@string/menu_send_tweet"
         android:icon="@drawable/ic_check"
         app:showAsAction="always"
+        android:onClick="actionSendTweet"
         />
 
 
