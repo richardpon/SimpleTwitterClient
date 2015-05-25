@@ -12,7 +12,9 @@ import android.widget.Toast;
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.simpletwitterclient.listeners.EndlessScrollListener;
+import com.codepath.apps.simpletwitterclient.models.SignedInUser;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
+import com.codepath.apps.simpletwitterclient.models.User;
 import com.codepath.apps.simpletwitterclient.networking.TwitterApplication;
 import com.codepath.apps.simpletwitterclient.networking.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -61,9 +63,8 @@ public class TimelineActivity extends ActionBarActivity {
         client = TwitterApplication.getRestClient(); //singleton client
 
 
-
+        //fetchSignedInUsersProfile();
         //fetchTweetsIntoTimeline(minTweetId);
-
     }
 
 
@@ -165,6 +166,29 @@ public class TimelineActivity extends ActionBarActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_COMPOSE) {
 
         }
+    }
+
+    /**
+     * This fetch's the signed in user's profile
+     */
+    private void fetchSignedInUsersProfile() {
+
+        client.getUserProfile(new JsonHttpResponseHandler() {
+
+            //Success
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
+                User signedInUser = User.fromJson(json);
+                SignedInUser.persistSignedInUser(TimelineActivity.this, signedInUser);
+            }
+
+            //Failure
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.i(TAG, "ERROR getting Signed in User===" + errorResponse.toString());
+                Toast.makeText(TimelineActivity.this, "Failed to get signed in user's info", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

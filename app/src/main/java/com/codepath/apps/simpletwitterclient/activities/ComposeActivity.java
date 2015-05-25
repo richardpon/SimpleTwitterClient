@@ -1,13 +1,25 @@
 package com.codepath.apps.simpletwitterclient.activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.models.SignedInUser;
+import com.codepath.apps.simpletwitterclient.models.User;
+import com.squareup.picasso.Picasso;
 
 public class ComposeActivity extends ActionBarActivity {
+
+    private final static String TAG = "ComposeActivity";
+
+    TextView tvComposeName;
+    TextView tvComposeScreenName;
+    ImageView ivComposeUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,8 +28,20 @@ public class ComposeActivity extends ActionBarActivity {
 
         // Enable Up navigation
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        initViews();
+
+        renderSignedInUser();
     }
 
+    /**
+     * Get references to all the views in the layout
+     */
+    private void initViews() {
+        tvComposeName = (TextView) findViewById(R.id.tvComposeName);
+        tvComposeScreenName = (TextView) findViewById(R.id.tvComposeScreenName);
+        ivComposeUser = (ImageView) findViewById(R.id.ivComposeUser);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,5 +70,15 @@ public class ComposeActivity extends ActionBarActivity {
 //        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void renderSignedInUser() {
+        User user = SignedInUser.getSignedInUser(this);
+
+        Log.wtf(TAG, "screenname="+user.getScreenName());
+
+        tvComposeScreenName.setText(user.getScreenName());
+        tvComposeName.setText(user.getName());
+        Picasso.with(this).load(user.getProfileImageUrl()).into(ivComposeUser);
     }
 }

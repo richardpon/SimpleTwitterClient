@@ -5,6 +5,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User {
+
+    public User() {
+
+    }
+
+    public User(String name, String screenName, long uid, String profileImageUrl) {
+        this.name = name;
+        this.uid = uid;
+        this.screenName = screenName;
+        this.profileImageUrl = profileImageUrl;
+    }
+
     public String getName() {
         return name;
     }

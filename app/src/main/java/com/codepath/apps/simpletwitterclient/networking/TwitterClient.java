@@ -56,8 +56,17 @@ url: GET statuses/home_timeline.json
         getClient().get(apiUrl, params, handler);
     }
 
-    // Compose Tweet
 
+    // Get Users profile
+    public void getUserProfile(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+
+        //Specify Params
+        RequestParams params = new RequestParams();
+
+        // Execute
+        getClient().get(apiUrl, params, handler);
+    }
 
 
 
