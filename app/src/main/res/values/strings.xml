@@ -12,14 +12,12 @@
     <string name="tweet_screenname">"@wilw"</string>
     <string name="tweet_name">Wil Wheaton</string>
     <string name="tweet_body">Missed the East Coast showing of @wilwproject because I was writing @CAH cards with the brilliant Cards Against Humanity tean. TO THE DVR!</string>
+    <string name="tweet_media_description">Image embedded inside tweet</string>
 
 
     <!-- Timeline Action Bar -->
     <string name="compose">compose</string>
-
     <string name="title_activity_compose">""</string>
-
-    <!-- Timeline Action Bar -->
     <string name="menu_send_tweet">TWEET</string>
 
     <!-- Compose -->

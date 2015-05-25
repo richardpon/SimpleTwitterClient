@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.lib.Logger;
 import com.codepath.apps.simpletwitterclient.models.Tweet;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +31,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         TextView name;
         TextView body;
         TextView createdAt;
+        ImageView mediaImage;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
@@ -51,6 +53,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
             viewHolder.name = (TextView) convertView.findViewById(R.id.tvName);
             viewHolder.body = (TextView) convertView.findViewById(R.id.tvBody);
             viewHolder.createdAt = (TextView) convertView.findViewById(R.id.tvCreatedAt);
+            viewHolder.mediaImage = (ImageView) convertView.findViewById(R.id.ivMediaImage);
 
             convertView.setTag(viewHolder);
         } else {
@@ -64,6 +67,15 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
         viewHolder.profileImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
 
         Picasso.with(getContext()).load(tweet.getUser().getProfileImageUrl()).into(viewHolder.profileImage);
+
+        // Conditionally load MediaImage if it exists
+        viewHolder.mediaImage.setImageResource(android.R.color.transparent); //clear out image for recycled view
+        viewHolder.mediaImage.setVisibility(View.GONE);
+        if (tweet.getMediaUrl().length() != 0) {
+            Logger.log(TAG, "setting image to ="+tweet.getMediaUrl());
+            Picasso.with(getContext()).load(tweet.getMediaUrl()).into(viewHolder.mediaImage);
+            viewHolder.mediaImage.setVisibility(View.VISIBLE);
+        }
 
         return convertView;
     }
