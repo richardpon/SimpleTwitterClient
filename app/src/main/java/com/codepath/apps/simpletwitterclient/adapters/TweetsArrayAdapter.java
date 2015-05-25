@@ -57,7 +57,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet>{
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.username.setText(tweet.getUser().getScreenName());
+        viewHolder.username.setText("@"+tweet.getUser().getScreenName());
         viewHolder.name.setText(tweet.getUser().getName());
         viewHolder.createdAt.setText(tweet.getCreatedAt());
         viewHolder.body.setText(tweet.getBody());

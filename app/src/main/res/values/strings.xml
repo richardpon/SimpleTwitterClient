@@ -22,7 +22,10 @@
     <!-- Timeline Action Bar -->
     <string name="menu_send_tweet">TWEET</string>
 
-
-
+    <!-- Compose -->
+    <string name="compose_name">Nathan</string>
+    <string name="compose_screenname">"@nathan_miso"</string>
+    <string name="compose_image_description">User\'s Image</string>
+    <string name="compose_hint">What\'s happening?</string>
 
 </resources>
