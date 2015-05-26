@@ -2,6 +2,7 @@ package com.codepath.apps.simpletwitterclient.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ public class TimelineActivity extends ActionBarActivity {
     private ListView lvTweets;
     private long minTweetId; //Long.MAX_VALUE;
     private final int REQUEST_CODE_COMPOSE = 323;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,9 @@ public class TimelineActivity extends ActionBarActivity {
         //get the client
         client = TwitterApplication.getRestClient(); //singleton client
 
+        // Pull to Refresh
+        setUpPullToRefresh();
+
         loadNewTweets();
     }
 
@@ -72,8 +77,9 @@ public class TimelineActivity extends ActionBarActivity {
     private void clearTweets() {
         // Tried to use Long.MAX_VALUE here, but didn't work. Instead used Long.MAX_VALUE/10
         // This should be large enough
-        minTweetId = Long.parseLong("922337203685477580");
+        // Clear Current tweets
         aTweets.clear();
+        minTweetId = Long.parseLong("922337203685477580");
     }
 
 
@@ -126,6 +132,7 @@ public class TimelineActivity extends ActionBarActivity {
                 updateMinTweetIdFromTweetList(tweets);
                 persistTweets(tweets);
                 aTweets.addAll(tweets);
+                swipeContainer.setRefreshing(false);
             }
 
             //Failure
@@ -141,6 +148,7 @@ public class TimelineActivity extends ActionBarActivity {
 
                 Toaster.create(TimelineActivity.this, "Sorry, the network appears to be down");
                 Toaster.create(TimelineActivity.this, "Pull to refresh to try again");
+                swipeContainer.setRefreshing(false);
             }
         });
     }
@@ -252,5 +260,22 @@ public class TimelineActivity extends ActionBarActivity {
         ArrayList existingTweets = (ArrayList) Tweet.getAll();
         aTweets.addAll(existingTweets);
     }
+
+    private void setUpPullToRefresh() {
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                clearTweets();
+                loadNewTweets();
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
 
 }
