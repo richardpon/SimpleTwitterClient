@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.simpletwitterclient.lib.Logger;
+import com.codepath.apps.simpletwitterclient.lib.Network;
 import com.codepath.apps.simpletwitterclient.lib.Toaster;
 import com.codepath.apps.simpletwitterclient.listeners.EndlessScrollListener;
 import com.codepath.apps.simpletwitterclient.models.SignedInUser;
@@ -62,12 +63,7 @@ public class TimelineActivity extends ActionBarActivity {
         //get the client
         client = TwitterApplication.getRestClient(); //singleton client
 
-        // Get all tweets from Storage
-        ArrayList existingTweets = (ArrayList) Tweet.getAll();
-        aTweets.addAll(existingTweets);
-
-        fetchSignedInUsersProfile();
-        fetchTweetsIntoTimeline(minTweetId);
+        loadNewTweets();
     }
 
     /**
@@ -135,9 +131,16 @@ public class TimelineActivity extends ActionBarActivity {
             //Failure
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
                 Logger.log(TAG, "-->no network");
+                try {
+                    Logger.log(TAG, errorResponse.toString());
+                } catch (Exception e) {
+                    //do nothing
+                }
+
                 Toaster.create(TimelineActivity.this, "Sorry, the network appears to be down");
-                Toaster.create(TimelineActivity.this, "Please pull to refresh to try again");
+                Toaster.create(TimelineActivity.this, "Pull to refresh to try again");
             }
         });
     }
@@ -223,6 +226,31 @@ public class TimelineActivity extends ActionBarActivity {
                 Toast.makeText(TimelineActivity.this, "Is the network down? Using cached User", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * This loads new tweets for the first time
+     */
+    private void loadNewTweets() {
+
+        Network network = new Network();
+        if (network.isNetworkAvailable(this)) {
+            Logger.log(TAG,"====network up!");
+            fetchTweetsIntoTimeline(minTweetId);
+            fetchSignedInUsersProfile();
+
+        } else {
+            Logger.log(TAG,"===network down!");
+            Toaster.create(TimelineActivity.this, "Sorry, the network appears to be down. Using cached data");
+            Toaster.create(TimelineActivity.this, "Pull to refresh to try again");
+            loadTweetsFromCache();
+        }
+    }
+
+    private void loadTweetsFromCache() {
+        // Get all tweets from Storage
+        ArrayList existingTweets = (ArrayList) Tweet.getAll();
+        aTweets.addAll(existingTweets);
     }
 
 }
