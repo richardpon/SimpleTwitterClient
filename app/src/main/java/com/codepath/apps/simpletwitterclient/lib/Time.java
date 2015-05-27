@@ -32,6 +32,9 @@ public class Time {
         return relativeDate;
     }
 
+    /**
+     * Creates a suitable relative time in the format of 12h or 15s, etc
+     */
     public static String getTimeAgo(String rawJsonDate) {
         String longFormat = Time.getRelativeTimeAgo(rawJsonDate);
         String[] parts = longFormat.split(" ");

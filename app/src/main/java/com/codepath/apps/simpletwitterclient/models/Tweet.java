@@ -69,7 +69,6 @@ public class Tweet extends Model {
     // Tweet.fromJson("{ .. }" => Tweet
     public static Tweet fromJson(JSONObject jsonObject) {
 
-
         Tweet tweet = new Tweet();
         // Extract values from json and store them
         try {
@@ -120,11 +119,16 @@ public class Tweet extends Model {
         return tweets;
     }
 
+    /**
+     * Loads the user from SQLite as long as the user's uid is set
+     */
     public void initUser() {
         this.user = User.getUserWithId(this.userId);
     }
 
-
+    /**
+     * Gets all tweets from persistence storage
+     */
     public static List<Tweet> getAll() {
         List<Tweet> tweets = new Select()
                 .from(Tweet.class)

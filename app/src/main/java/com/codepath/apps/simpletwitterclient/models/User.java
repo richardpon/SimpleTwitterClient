@@ -76,6 +76,9 @@ public class User extends Model {
         return u;
     }
 
+    /**
+     * Gets a user with the specified ID
+     */
     public static User getUserWithId(long uid) {
         List<User> Users = new Select()
                 .from(User.class)
@@ -85,6 +88,5 @@ public class User extends Model {
 
         return Users.get(0);
     }
-
 
 }
