@@ -252,6 +252,7 @@ public class TimelineActivity extends ActionBarActivity {
             Toaster.create(TimelineActivity.this, "Sorry, the network appears to be down. Using cached data");
             Toaster.create(TimelineActivity.this, "Pull to refresh to try again");
             loadTweetsFromCache();
+            swipeContainer.setRefreshing(false);
         }
     }
 
