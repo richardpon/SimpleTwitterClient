@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.codepath.apps.simpletwitterclient.R;
 import com.codepath.apps.simpletwitterclient.adapters.TweetsArrayAdapter;
@@ -98,16 +97,6 @@ public class TimelineActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -139,9 +128,8 @@ public class TimelineActivity extends ActionBarActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
 
-                Logger.log(TAG, "-->no network");
                 try {
-                    Logger.log(TAG, errorResponse.toString());
+                    Logger.log(TAG, "No network "+errorResponse.toString());
                 } catch (Exception e) {
                     //do nothing
                 }
@@ -165,7 +153,6 @@ public class TimelineActivity extends ActionBarActivity {
                 minTweetId = curTweetId;
             }
         }
-
     }
 
     /**
@@ -183,6 +170,9 @@ public class TimelineActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Sets up infinite scrolling
+     */
     private void setScrollListener() {
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
@@ -231,7 +221,7 @@ public class TimelineActivity extends ActionBarActivity {
             //Failure
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Toast.makeText(TimelineActivity.this, "Is the network down? Using cached User", Toast.LENGTH_SHORT).show();
+                // Do Nothing
             }
         });
     }
@@ -254,12 +244,18 @@ public class TimelineActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Loads tweets from SQLite cache. This is used in the case of no network
+     */
     private void loadTweetsFromCache() {
         // Get all tweets from Storage
         ArrayList existingTweets = (ArrayList) Tweet.getAll();
         aTweets.addAll(existingTweets);
     }
 
+    /**
+     * Sets up the pull to refresh functionality
+     */
     private void setUpPullToRefresh() {
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

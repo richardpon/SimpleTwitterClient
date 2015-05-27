@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletwitterclient.R;
-import com.codepath.apps.simpletwitterclient.lib.Logger;
 import com.codepath.apps.simpletwitterclient.lib.Toaster;
 import com.codepath.apps.simpletwitterclient.models.SignedInUser;
 import com.codepath.apps.simpletwitterclient.models.User;
@@ -22,6 +21,7 @@ import com.codepath.apps.simpletwitterclient.networking.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.Header;
 import org.json.JSONObject;
 
 public class ComposeActivity extends ActionBarActivity {
@@ -78,18 +78,12 @@ public class ComposeActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Renders the signed in user's avatar, name, and screenname
+     */
     private void renderSignedInUser() {
         User user = SignedInUser.getSignedInUser(this);
 
@@ -98,6 +92,9 @@ public class ComposeActivity extends ActionBarActivity {
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivComposeUser);
     }
 
+    /**
+     * This actually sends a tweet, as long as the tweet contains 1-140 characters
+     */
     public void actionSendTweet(MenuItem mi) {
 
         String text = etCompose.getText().toString();
@@ -107,11 +104,13 @@ public class ComposeActivity extends ActionBarActivity {
             return;
         }
 
+
+
         client.sendTweet(text, new JsonHttpResponseHandler() {
             //Success
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject json) {
-                Toaster.create(ComposeActivity.this, "Tweet Success!");
+                Toaster.create(ComposeActivity.this, "Tweet Sent!");
 
                 Intent data = new Intent();
                 data.putExtra("success", true);
