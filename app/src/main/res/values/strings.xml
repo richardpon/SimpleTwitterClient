@@ -25,5 +25,6 @@
     <string name="compose_screenname">"@nathan_miso"</string>
     <string name="compose_image_description">User\'s Image</string>
     <string name="compose_hint">What\'s happening?</string>
+    <string name="char_count">0/140</string>
 
 </resources>

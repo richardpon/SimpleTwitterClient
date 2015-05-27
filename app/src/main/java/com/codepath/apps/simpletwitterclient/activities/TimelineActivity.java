@@ -243,13 +243,11 @@ public class TimelineActivity extends ActionBarActivity {
 
         Network network = new Network();
         if (network.isNetworkAvailable(this)) {
-            Logger.log(TAG,"====network up!");
             fetchTweetsIntoTimeline(minTweetId);
             fetchSignedInUsersProfile();
 
         } else {
-            Logger.log(TAG,"===network down!");
-            Toaster.create(TimelineActivity.this, "Sorry, the network appears to be down. Using cached data");
+            Toaster.create(TimelineActivity.this, "Sorry, the network appears to be down. Showing cached data");
             Toaster.create(TimelineActivity.this, "Pull to refresh to try again");
             loadTweetsFromCache();
             swipeContainer.setRefreshing(false);
@@ -277,6 +275,5 @@ public class TimelineActivity extends ActionBarActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
     }
-
 
 }

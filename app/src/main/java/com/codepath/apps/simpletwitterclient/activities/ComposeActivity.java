@@ -3,6 +3,9 @@ package com.codepath.apps.simpletwitterclient.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.view.menu.ActionMenuItemView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.lib.Logger;
 import com.codepath.apps.simpletwitterclient.lib.Toaster;
 import com.codepath.apps.simpletwitterclient.models.SignedInUser;
 import com.codepath.apps.simpletwitterclient.models.User;
@@ -18,7 +22,6 @@ import com.codepath.apps.simpletwitterclient.networking.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
 public class ComposeActivity extends ActionBarActivity {
@@ -67,6 +70,9 @@ public class ComposeActivity extends ActionBarActivity {
         actionBar.setLogo(R.drawable.ic_twitter);
         actionBar.setDisplayUseLogoEnabled(true);
 
+        // Enable listener to update char count in action bar when text changes
+        setupCharCountListener();
+
         return true;
     }
 
@@ -92,8 +98,15 @@ public class ComposeActivity extends ActionBarActivity {
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivComposeUser);
     }
 
-    public void actionSendTweet(MenuItem menuItem) {
+    public void actionSendTweet(MenuItem mi) {
+
         String text = etCompose.getText().toString();
+
+        // Ignore sending empty tweets
+        if (text.length() == 0) {
+            return;
+        }
+
         client.sendTweet(text, new JsonHttpResponseHandler() {
             //Success
             @Override
@@ -115,6 +128,34 @@ public class ComposeActivity extends ActionBarActivity {
                 data.putExtra("success", false);
                 setResult(RESULT_OK, data);
                 finish();
+            }
+        });
+    }
+
+    /**
+     * Whenever the text is changed (including copy/paste) from the compose window, this updates the
+     * counter in the actionbar
+     */
+    private void setupCharCountListener() {
+        etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                int count = s.length();
+
+                String newCharCount = count+"/140";
+
+                ActionMenuItemView miCharCount = (ActionMenuItemView) findViewById(R.id.miCharCount);
+                miCharCount.setTitle(newCharCount);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Do Nothing
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do Nothing
             }
         });
     }

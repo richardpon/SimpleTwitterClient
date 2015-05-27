@@ -5,6 +5,14 @@
 
 
     <item
+        android:id="@+id/miCharCount"
+        android:title="@string/char_count"
+        app:showAsAction="always"
+        android:textSize="15sp"
+        android:enabled="false"
+        />
+
+    <item
         android:id="@+id/miSendTweet"
         android:title="@string/menu_send_tweet"
         android:icon="@drawable/ic_check"
