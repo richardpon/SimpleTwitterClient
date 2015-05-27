@@ -9,7 +9,7 @@
         android:title="@string/char_count"
         app:showAsAction="always"
         android:textSize="15sp"
-
+        android:enabled="false"
         />
 
     <item

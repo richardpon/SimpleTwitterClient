@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.simpletwitterclient.R;
+import com.codepath.apps.simpletwitterclient.lib.Logger;
 import com.codepath.apps.simpletwitterclient.lib.Toaster;
 import com.codepath.apps.simpletwitterclient.models.SignedInUser;
 import com.codepath.apps.simpletwitterclient.models.User;
@@ -21,7 +22,6 @@ import com.codepath.apps.simpletwitterclient.networking.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.Header;
 import org.json.JSONObject;
 
 public class ComposeActivity extends ActionBarActivity {
@@ -98,8 +98,15 @@ public class ComposeActivity extends ActionBarActivity {
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivComposeUser);
     }
 
-    public void actionSendTweet(MenuItem menuItem) {
+    public void actionSendTweet(MenuItem mi) {
+
         String text = etCompose.getText().toString();
+
+        // Ignore sending empty tweets
+        if (text.length() == 0) {
+            return;
+        }
+
         client.sendTweet(text, new JsonHttpResponseHandler() {
             //Success
             @Override
