@@ -3,6 +3,9 @@ package com.codepath.apps.simpletwitterclient.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.view.menu.ActionMenuItemView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -67,6 +70,9 @@ public class ComposeActivity extends ActionBarActivity {
         actionBar.setLogo(R.drawable.ic_twitter);
         actionBar.setDisplayUseLogoEnabled(true);
 
+        // Enable listener to update char count in action bar when text changes
+        setupCharCountListener();
+
         return true;
     }
 
@@ -115,6 +121,34 @@ public class ComposeActivity extends ActionBarActivity {
                 data.putExtra("success", false);
                 setResult(RESULT_OK, data);
                 finish();
+            }
+        });
+    }
+
+    /**
+     * Whenever the text is changed (including copy/paste) from the compose window, this updates the
+     * counter in the actionbar
+     */
+    private void setupCharCountListener() {
+        etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                int count = s.length();
+
+                String newCharCount = count+"/140";
+
+                ActionMenuItemView miCharCount = (ActionMenuItemView) findViewById(R.id.miCharCount);
+                miCharCount.setTitle(newCharCount);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Do Nothing
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do Nothing
             }
         });
     }
